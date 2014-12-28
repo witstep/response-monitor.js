@@ -23,6 +23,7 @@ A simple client-side JavaScript library for use in the implementation of web pag
 - Server-side error detection
 - Timeout detection
 - Cross browser
+- AMD and CommonJS support
 - Lightweight
 - MIT license
 
