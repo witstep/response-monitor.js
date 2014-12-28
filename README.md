@@ -151,18 +151,21 @@ Provides a way to change the `Cookie` prefix after instantiation.
 It is called when the user initiates a request by clicking on an anchor or submitting a registered form.
 The cookieName provides an unique identifier for the request, that can be useful for the application being implemented.
 
-#### onMonitor(countdown)  ####
+#### onMonitor(countdown) ####
 
 This callback is called once every second, until there's a response from the server or the timeout period elapses.
+The `countdown` variable starts with the same values as the configured `timeout`, and counts down to zero.
 
-#### onResponse(status)    ####
+#### onResponse(status) ####
+
+Called when the monitor detects that the Cookie is avaiable. The `status` variable contains the value passed in the cookie.
 
 #### onTimeout()  ####
 
+Called once when the timeout period elapses without a response from the server.
+
 
 ## Example Usage ##
-
-For examples beyond this README file, check the ["/demos"](demos) directory on the repository.
 
 * [Server-side](#user-content-server-side)
     - [Cookies](#user-content-cookies)
