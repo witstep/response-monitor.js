@@ -41,9 +41,9 @@ The following browsers have been tested:
 
 Use this option if you want to host the JS file(s) yourself.
 
-- Minified ([response-monitor.min.js](https://raw.github.com/witstep/response-monitor.js/0.1.0/js/response-monitor.min.js))
-- Original ([response-monitor.js](https://raw.github.com/witstep/response-monitor.js/0.1.0/js/response-monitor.js))
-- JQuery plug-in ([response-monitor.jquery.js] (https://raw.github.com/witstep/response-monitor.js/0.1.0/js/response-monitor.jquery.js))
+- Minified ([response-monitor.min.js](https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.min.js))
+- Original ([response-monitor.js](https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.js))
+- JQuery plug-in ([response-monitor.jquery.js] (https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.jquery.js))
 
 #### Content Delivery Network
 
@@ -56,7 +56,7 @@ You shouldn't use this option, without first reading and understanding the rawgi
 The ```<script>``` tag would look like this:
 
 ```html
-<script src="http://cdn.rawgit.com/witstep/response-monitor.js/0.1.0/response-monitor.min.js">
+<script src="http://cdn.rawgit.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.min.js">
 </script>
 ```
 ## API Reference ##
