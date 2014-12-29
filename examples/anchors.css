@@ -1,0 +1,36 @@
+.maindiv{
+	position: relative;
+	width: 520px;
+	margin: 25px;
+}
+
+.maindiv.panel-body{
+	text-align: center;	
+}
+
+.form-group{
+	text-align: center;
+}
+
+span.glyphicon{
+    font-size: 1.2em;
+}
+
+.green{color: #00aa00;}	
+.orange{color: orange}
+.red{color: red}
+
+.spinner_container{
+	position: relative;
+}
+
+#statusbar{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: left;
+	padding: 5px;
+}
+
+

@@ -1,0 +1,22 @@
+.maindiv{
+	position: relative;
+	width: 320px;
+	margin: 25px;
+}
+
+.maindiv.panel-body{
+	text-align: center;
+}
+
+.form-group{
+	text-align: center;	
+}
+
+#statusbar{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: left;
+	padding: 5px;
+}

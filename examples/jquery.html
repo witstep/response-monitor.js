@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>response-monitor.js: JQuery Demo</title>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="../js/response-monitor.js"></script>
+	<script src="../js/response-monitor.jquery.js"></script>
+	<link rel="stylesheet" href="jquery.css">
+</head>
+<body>
+
+	<div id="wrapper">
+
+		<div class="demo-request">
+			<h1>Expected outcome: Success</h1>
+			<a id="a1" class="monitored-anchor" href="service.php?dividend=1000&divisor=250#10">a</a>
+			<p>Timeout: <span id="timeout_a1"></span></p>
+			<p>Cookie: <span id="cookie_a1"></span></p>
+			<p>Duration: <span id="duration_a1"></span></p>
+			<p>Outcome: <span id="outcome_a1"></span></p>
+		</div>
+
+		<div class="demo-request">
+			<h1>Expected outcome: Timeout</h1>
+			<a id="a2" class="monitored-anchor" href="service.php?dividend=1000&divisor=8#3">b</a>
+			<p>Timeout: <span id="timeout_a2"></span></p>
+			<p>Cookie: <span id="cookie_a2"></span></p>
+			<p>Duration: <span id="duration_a2"></span></p>
+			<p>Outcome: <span id="outcome_a2"></span></p>
+		</div>
+
+		<div class="demo-request">
+			<h1>Expected outcome: Server-side Error</h1>
+			<a id="a3" class="monitored-anchor" href="service.php?dividend=1000&divisor=0#10">c</a>
+			<p>Timeout: <span id="timeout_a3"></span></p>
+			<p>Cookie: <span id="cookie_a3"></span></p>
+			<p>Duration: <span id="duration_a3"></span></p>
+			<p>Outcome: <span id="outcome_a3"></span></p>
+		</div>
+
+	</div>
+
+	<script>
+		$( document ).ready(function() {
+			//copy part of the href into the innerHTML of the anchors
+			$('.monitored-anchor').each( function(){
+				$(this).html(this.search.replace(/&/g,'&amp;')+this.hash);
+				$('#timeout_'+this.id).html(this.hash.split('#')[1]);
+			});
+		
+
+			$('.monitored-anchor').each( function(){
+				var self = this;
+				var timeout = self.hash.split('#')[1];
+				$(this).ResponseMonitor({
+					onRequest: function(token){
+						console.log(token);
+						$('#cookie_'+self.id).html(token);
+						$('#outcome_'+self.id).html('');
+						$('#duration_'+self.id).html(''); 
+					},
+					onMonitor: function(countdown){
+						$('#duration_'+self.id).html(timeout-countdown); 
+					},
+					onResponse: function(result){
+						$('#outcome_'+self.id).html(result==1?'success':'server-side error');
+					},
+					onTimeout: function(){
+						$('#outcome_'+self.id).html('timeout');
+					}
+				});
+			});
+		});
+	</script>
+
+</body>
+</html>

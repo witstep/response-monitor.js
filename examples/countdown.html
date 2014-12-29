@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>response-monitor.js: Countdown Demo</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>		
+		<script src="../js/response-monitor.js"></script>
+		<script src="../js/response-monitor.jquery.js"></script>		
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<style>
+			.btn-circle.btn-xl {
+				width: 70px;
+				height: 70px;
+				padding: 10px 16px;
+				font-size: 24px;
+				line-height: 1.33;
+				border-radius: 35px;
+			}
+		</style>
+	</head>
+	<body>
+		<p><a id="download_anchor" href="service.php?dividend=8&divisor=3#5">Download</a></p>
+		<p><button type="button" id="countdown_span" class="btn btn-circle btn-xl"></button></p>
+		<script>
+			$( document ).ready(function() {
+				$('#countdown_span').hide();
+
+				var options = {
+
+					onRequest: function(cookieName){
+						$('#countdown_span')
+							.removeClass('btn-success')
+							.removeClass('btn-danger')
+							.addClass('btn-primary')
+							.show();
+					},
+
+					onMonitor: function(countDown){
+						$('#countdown_span').html(countDown);
+					},
+
+					onResponse: function(status){
+						$('#countdown_span').removeClass('btn-primary');
+						if( status == 1)
+							$('#countdown_span').addClass('btn-success');
+						else
+							$('#countdown_span').addClass('btn-danger');
+					},
+
+					onTimeout:  function(){
+						$('#countdown_span')
+							.removeClass('btn-primary')
+							.addClass('btn-danger');
+					}
+				};
+
+				$('#download_anchor').ResponseMonitor(options);
+			});
+		</script>
+	</body>
+</html>

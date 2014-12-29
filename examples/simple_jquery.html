@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>response-monitor.js: Simple Demo</title>
+		<script src="../js/response-monitor.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+		<script src="../js/response-monitor.jquery.js"></script>
+		<style>
+			a{position: relative; padding: 5px;}
+			div{position: relative; width: 150px;}
+		</style>
+	</head>
+	<body>
+		<h1>download-monitor.js: simple jquery demo</h1>
+		<p>
+			<a name="a" href="service.php?dividend=100&divisor=5#10">100/5</a>
+			<a name="c" href="service.php?dividend=20&divisor=2#3">3s timeout</a>
+			<a name="b" href="service.php?dividend=100&divisor=0#5">Server-side error</a>
+		</p>
+		<div>
+			<form id="example_form" action="service.php">
+				<input name="dividend" type="text" value="10">
+				<input name="divisor" type="text" value="2">
+				<input type="submit">
+			</form>
+		</div>
+		<script type="text/javascript">
+			$( document ).ready(function() {
+				$('a').ResponseMonitor();
+				$('form').ResponseMonitor();
+			});
+		</script>
+	</body>
+</html>

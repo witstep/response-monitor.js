@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>response-monitor.js: Anchor Demo</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="anchors.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js"></script>
+	<script src="../js/response-monitor.js"></script>
+</head>
+<body>
+	<div class="panel panel-primary maindiv">
+		<div class="panel-heading">response-monitor.js: HTML Anchor Demo</div>
+			<div class="panel-body">
+				<table class="table table-striped" id="demo_table">
+					<tr>
+						<th>Request</th>
+						<th>Timeout</th>
+						<th>Duration</th>
+						<th>Status</th>
+					</tr>
+					<tr>
+						<td>
+							<a id="1" href="service.php?dividend=1000&divisor=250#10" name=""></a>
+						</td>
+						<td></td><td></td><td><span></span></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="2" href="service.php?dividend=1000&divisor=250#10" name=""></a>
+						</td>
+						<td></td><td></td><td><span></span></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="3" href="service.php?dividend=8&divisor=4#3" name=""></a>
+						</td>
+						<td></td><td></td><td><span></span></td>
+					</tr>
+					<tr>
+						<td>
+							<a id="4" href="service.php?dividend=8&divisor=0#5" name=""></a>
+						</td>
+						<td></td><td></td><td><span></span></td>
+					</tr>
+				</table>
+				<div class="form-group">
+					
+				<button class="btn btn-primary" value="Submit all" onclick="submitAll();">Submit all</button>
+				</div>
+
+				<span id="statusbar" class="label label-default">
+					Click one of the links or use the button to submit all requests at once...
+				</span>
+			</div>
+		</div>
+	</div>
+	<script language="javascript">
+		"use strict";
+		var table = document.getElementById('demo_table');
+
+		//initialize anchors, isolating scope of vars a and i
+		(function (){
+			for(var i=0; i < document.anchors.length; i++){
+				var a = document.anchors[i];
+				a.innerHTML = a.search.replace(/&/g,'&amp;');
+				a.onclick = function(){makeRequest(this)};
+				table.rows[i+1].children[1].innerHTML = a.hash.split('#')[1];
+			}
+		})();
+
+		function submitAll(){
+			for(var i=0; i < document.anchors.length; i++)
+				makeRequest(document.anchors[i]);
+		}
+
+		function setStatus(trigger, gliph, color){
+			var status = table.rows[trigger.id].children[3].children[0];
+			status.className = 'glyphicon glyphicon-'+gliph+' '+color;
+		}
+
+		function makeRequest(trigger){
+			console.log(trigger);
+			var options = {
+				timeout: trigger.href.split('#')[1],
+				onRequest: onDownloadRequest,
+				onResponse: onDownloadReady,
+				onTimeout: onDownloadTimeout,
+				onMonitor: onDownloadMonitor
+			};
+
+			function onDownloadMonitor(countDown){
+				var duration = table.rows[trigger.id].children[2];
+				duration.innerHTML=options.timeout - countDown;
+				setStatus(trigger,'time','');
+			}
+
+			function onDownloadRequest(cookieName){
+				setStatus(trigger, 'minus','');
+			}
+
+			function onDownloadTimeout(){
+				setStatus(trigger, 'time','red');
+			}
+
+			function onDownloadReady(result){
+				if(result == 1)
+					setStatus(trigger, 'ok', 'green');
+				else
+					setStatus(trigger, 'warning-sign','red');
+			}
+
+			var responseMonitor = new ResponseMonitor(trigger,options);
+			responseMonitor.execute();
+		}
+
+	</script>
+</body>
+</html>

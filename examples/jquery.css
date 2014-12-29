@@ -1,0 +1,25 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16px;
+}
+
+.demo-request {
+	background: #aabbcc;
+	color: black;
+	margin: 20px;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+#wrapper {
+	width: 480px;
+}
+
+span{
+	color: #333333;
+}
+
+h1{
+	font-size: 18px;
+	color: #333333;
+}

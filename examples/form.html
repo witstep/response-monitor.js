@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>response-monitor.js: Form Demo</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="form.css">
+	<script src="../js/response-monitor.js"></script>
+</head>
+<body>
+	<div class="panel panel-primary maindiv">
+		<div class="panel-heading">response-monitor.js: HTML Form Demo</div>
+			<div class="panel-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-5 control-label" for="divisorInput">Timeout</label>
+						<div class="col-sm-5">
+							<input id="timeoutInput" value="10" class="form-control">
+						</div>
+					</div>
+				</form>
+				<hr>
+				<form action="service.php" class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-5 control-label" for="dividendInput">Dividend</label>
+						<div class="col-sm-5">
+							<input type="text" name="dividend" class="form-control" id="dividendInput" placeholder="Dividend" value="1000">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-5 control-label" for="divisorInput">Divisor</label>
+						<div class="col-sm-5">
+							<input type="text" name="divisor" class="form-control" id="divisorInput" placeholder="Divisor" value="250">
+						</div>
+					</div>
+					<div class="form-group">
+						<button type="button" onclick="makeRequest(this);" class="btn btn-primary">Get</button>
+						<button type="button" onclick="makeRequest(this);" class="btn btn-primary">Post</button>
+					</div>
+				</form>
+				<span id="statusbar" class="label label-default">
+					Division by 0 simulates server error.
+				</span>
+			</div>
+		</div>
+	</div>
+	
+	<script language="javascript">
+		var statusBar = document.getElementById('statusbar');
+
+		function setStatus(text, cssClass){
+			statusBar.className = 'label '+cssClass;
+			statusBar.innerHTML = text;
+		}
+		function makeRequest(button){
+			var form = button.form;
+			form.method = button.innerText;
+
+			var options = {
+				timeout: document.getElementById('timeoutInput').value,
+				onRequest: onDownloadRequest,
+				onResponse: onDownloadReady,
+				onTimeout: onDownloadTimeout,
+				onMonitor: onDownloadMonitor
+			};
+
+			function onDownloadMonitor(countDown){
+				setStatus(countDown + ' seconds until timeout...','label-primary');
+			}
+
+			function onDownloadRequest(cookieName){
+				for(var i=0; i < form.elements.length; i++) 
+					form.elements[i].disabled = true;
+
+				form.style.cursor = "wait";
+				setStatus('Making request...','label-primary');
+			}
+
+			function onDownloadTimeout(){
+				stopWaiting(button);
+				setStatus('Timeout!','label-danger');
+			}
+
+			function onDownloadReady(result){
+				stopWaiting(button);
+				if(result == 1)
+					setStatus('Successful request... Try dividing by zero next time','label-success');
+				else
+					setStatus('Server-side error!','label-danger');
+			}
+
+			function stopWaiting(button){
+				for(var i=0; i < form.elements.length; i++) 
+					form.elements[i].disabled = false;
+
+				form.style.cursor = "auto";
+			}
+		
+			var waitingIndicator = new ResponseMonitor(form,options);
+
+			waitingIndicator.execute();
+		}
+	</script>
+</body>
+</html>
