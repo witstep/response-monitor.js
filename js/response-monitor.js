@@ -65,6 +65,12 @@
 		ResponseMonitor.prototype._configDefaultSpinner = function(options){
 			var self = this;
 			try{
+				var Spinner = require('spin');
+			}catch(e){
+				console.log('Spin.js not loaded.',e);
+			}
+			
+			try{
 				this.spinner = new Spinner();
 				var onTerminate = function(status){
 					self.spinner.stop();
