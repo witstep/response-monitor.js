@@ -6,10 +6,10 @@ A simple client-side JavaScript library for use in the implementation of web pag
 
 ## TOC
 * [Features](#features)
+* [Example Usage](#example-usage)
 * [Browser Compatibility](#browser-compatibility)
 * [Getting the Library](#getting-the-library)
 * [API Reference](#api-reference)
-* [Example Usage](#example-usage)
 * [Limitations](#limitations)
 * [License](#license)
  
@@ -26,6 +26,209 @@ A simple client-side JavaScript library for use in the implementation of web pag
 - AMD and CommonJS support
 - Lightweight
 - MIT license
+
+## Example Usage ##
+
+* [Server-side](#server-side)
+    - [Cookies](#cookies)
+* [Client-side](#client-side)
+    * [Download Request Triggers](#download-request-triggers)
+        * [Forms](#forms)
+        * [Anchors](#anchors)
+        * [URLs](#urls)
+    * [JQuery](#jquery)
+    * [Callbacks](#Callbacks)
+	* [RequireJS](#requirejs)
+
+### Server-side ###
+
+#### Cookies ####
+
+The monitor relies on a Cookie set on the server's response. If it is not set, the client will always finish monitoring with a timeout status.
+The response monitor implements all client-side Cookie handling, no extra programming is required, but on the server-side a Cookie must be set as described bellow.
+
+The Cookie name is not constant so that simultaneous requests from the same web-browser don't collide. It is composed of a fixed prefix and a time-stamp suffix.
+
+* The client passes the token as a GET argument, like this: `response-monitor=1419642741528`.
+* The server must then respond with a cookie named: `response-monitor_1419642741528`.
+* The value of the Cookie must be set and it can then optionally be interpreted as a simple status indicator, or carry a more complex structure, like a JSON string.
+* The server should use a short expiration period of a few minutes, otherwise the differently named cookies can accumulate because they are not overwritten during subsequent requests.
+
+This is an example of setting the Cookie using PHP:
+
+```PHP
+<?php
+$cookiePrefix = 'response-monitor'; //must match the one set on the client options
+$tokenValue = $_GET[$cookiePrefix];
+$cookieName = $cookiePrefix.'_'.$tokenValue; //ex: response-monitor_1419642741528
+
+//this value is passed to the client through the ResponseMonitor.onResponse callback
+$cookieValue = 1; //for ex, "1" can interpret as success and "0" as failure
+
+setcookie(
+	$cookieName,
+	$cookieValue,
+	time()+300,            // expire in 5 minutes
+	"/",
+	$_SERVER["HTTP_HOST"],
+	true,
+	false
+);
+
+header('Content-Type: text/plain');
+header("Content-Disposition: attachment; filename=\"$cookieName.txt\"");
+print_r($_REQUEST); //output $_GET and $_POST on the response file
+?>
+```
+
+### Client-side
+
+The class must be made available to the JavaScript engine in the usual ways.
+
+(Don't forget the [server-side](#server-side) requirements!)
+
+```html
+<script src="response-monitor.min.js"></script>
+```
+
+Alternatively it can be loaded using [RequireJS](#requirejs)
+
+#### Download Request Triggers
+
+The supported download triggers are HTML Anchors, Forms, and URLs as strings followed by a call to the `execute()` method.
+
+##### Forms #####
+
+Any HTML form can be used without specific changes. Both GET and POST methods are supported.
+
+For example
+
+```html
+<form id="my_form" method="POST">
+	<input type="text" name="criteria1">
+	<input type="text" name="criteria2">
+	<input type="submit" value="Download Report">
+</form>
+```
+
+After the form is registered, the submit event is intercepted and monitored.
+
+```javascript
+<script>
+	var my_form = document.getElementById('my_form');
+	ResponseMonitor.register(my_form); //the submit event of the form will monitored
+</script>
+```
+
+##### Anchors #####
+
+HTML Anchors to be monitored are defined as any other kind of hyper-link.
+
+Optionally, the hash fragment can be used to set the timeout period.
+
+
+```html
+<a class="my_anchors" href="/report?criteria1=a&criteria2=b#30">Report 1</a>
+<a class="my_anchors" href="/report?criteria3=a&criteria4=b#60">Report 2</a>
+<a class="my_anchors" href="/report?criteria5=a&criteria6=b#90">Report 3</a>
+```
+
+In this example, a collection of Anchors is registered with a single call:
+
+```javascript
+<script>
+	var my_anchors = document.getElementsByClassName('my_anchors');
+	ResponseMonitor.register(my_anchors); //the clicks on the links will be monitored
+</script>
+```
+
+##### URLs #####
+
+A string defining an URL can be used as a request trigger.
+
+```javascript
+<script>
+	var myMonitor = new ResponseMonitor('service.php?dividend=20&divisor=2');
+</script>
+```
+
+The request can then be initiated with the ` execute() ` method.
+
+```html
+<input type="button" value="Click Me!" onclick="myMonitor.execute();">
+```
+
+##### JQuery #####
+
+To use the JQuery plug-in, both the main source file and the JQuery plug-in must be available to the JavaScript engine.
+
+Script tags in a web page would look like this:
+
+```html
+<script src="response-monitor.js"></script>
+<script src="response-monitor.jquery.js"></script>
+```
+
+The following example registers all forms and anchors, setting a specific timeout of 20 seconds for forms:
+
+```JavaScript
+<script type="text/javascript">
+	$('a').ResponseMonitor();
+	$('form').ResponseMonitor({timeout: 20});
+</script>
+```
+
+##### Callbacks #####
+
+The callback functions are set on the `options` object and then passed on the `Constructor` or `register()` method.
+
+```JavaScript
+<script type="text/javascript">
+	var options = {
+		onRequest: function(token){
+			$('#cookie').html(token);
+			$('#outcome').html('');
+			$('#duration').html(''); 
+		},
+		onMonitor: function(countdown){
+			$('#duration').html(countdown); 
+		},
+		onResponse: function(status){
+			$('#outcome').html(status==1?'success':'failure');
+		},
+		onTimeout: function(){
+			$('#outcome').html('timeout');
+		}
+	};
+
+	$('a').ResponseMonitor(options);
+
+</script>
+```
+
+##### RequireJS #####
+
+The dependency on spin.js is optional and the related references can be ommitted, if implementing a custom waiting indicator.
+
+```JavaScript
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"></script>
+
+<script>
+
+	requirejs.config({
+		paths: { 
+			'spin': ['//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min'],
+			'response-monitor': ['../js/response-monitor.min']
+		}
+	});
+
+	require(['response-monitor','spin'], function(ResponseMonitor){
+		ResponseMonitor.register(document.anchors);
+	});
+
+</script>
+```
 
 ## Browser Compatibility
 
@@ -164,175 +367,6 @@ Called when the monitor detects that the Cookie is avaiable. The `status` variab
 #### onTimeout()  ####
 
 Called once when the timeout period elapses without a response from the server.
-
-
-## Example Usage ##
-
-* [Server-side](#server-side)
-    - [Cookies](#cookies)
-* [Client-side](#client-side)
-    * [Download Request Triggers](#download-request-triggers)
-        * [Forms](#forms)
-        * [Anchors](#anchors)
-        * [URLs](#urls)
-    * [JQuery](#jquery)
-    * [Callbacks](#Callbacks)
-
-### Server-side ###
-
-#### Cookies ####
-
-The monitor relies on a Cookie set on the server's response. If it is not set, the client will always finish monitoring with a timeout status.
-The response monitor implements all client-side Cookie handling, no extra programming is required, but on the server-side a Cookie must be set as described bellow.
-
-The Cookie name is not constant so that simultaneous requests from the same web-browser don't collide. It is composed of a fixed prefix and a time-stamp suffix.
-
-* The client passes the token as a GET argument, like this: `response-monitor=1419642741528`.
-* The server must then respond with a cookie named: `response-monitor_1419642741528`.
-* The value of the Cookie must be set and it can then optionally be interpreted as a simple status indicator, or carry a more complex structure, like a JSON string.
-* The server should use a short expiration period of a few minutes, otherwise the differently named cookies can accumulate because they are not overwritten during subsequent requests.
-
-This is an example of setting the Cookie using PHP:
-
-```PHP
-<?php
-$cookiePrefix = 'response-monitor'; //must match the one set on the client options
-$tokenValue = $_GET[$cookiePrefix];
-$cookieName = $cookiePrefix.'_'.$tokenValue; //ex: response-monitor_1419642741528
-
-//this value is passed to the client through the ResponseMonitor.onResponse callback
-$cookieValue = 1; //for ex, "1" can interpret as success and "0" as failure
-
-setcookie(
-	$cookieName,
-	$cookieValue,
-	time()+300,            // expire in 5 minutes
-	"/",
-	$_SERVER["HTTP_HOST"],
-	true,
-	false
-);
-
-header('Content-Type: text/plain');
-header("Content-Disposition: attachment; filename=\"$cookieName.txt\"");
-print_r($_REQUEST); //output $_GET and $_POST on the response file
-?>
-```
-
-### Client-side
-
-#### Download Request Triggers
-
-The supported download triggers are HTML Anchors, Forms, and URLs as strings followed by a call to the `execute()` method.
-
-##### Forms #####
-
-Any HTML form can be used without specific changes. Both GET and POST methods are supported.
-
-For example
-
-```html
-<form id="my_form" method="POST">
-	<input type="text" name="criteria1">
-	<input type="text" name="criteria2">
-	<input type="submit" value="Download Report">
-</form>
-```
-
-After the form is registered, the submit event is intercepted and monitored.
-
-```javascript
-<script>
-	var my_form = document.getElementById('my_form');
-	ResponseMonitor.register(my_form); //the submit event of the form will monitored
-</script>
-```
-
-##### Anchors #####
-
-HTML Anchors to be monitored are defined as any other kind of hyper-link.
-
-Optionally, the hash fragment can be used to set the timeout period.
-
-
-```html
-<a class="my_anchors" href="/report?criteria1=a&criteria2=b#30">Report 1</a>
-<a class="my_anchors" href="/report?criteria3=a&criteria4=b#60">Report 2</a>
-<a class="my_anchors" href="/report?criteria5=a&criteria6=b#90">Report 3</a>
-```
-
-In this example, a collection of Anchors is registered with a single call:
-
-```javascript
-<script>
-	var my_anchors = document.getElementsByClassName('my_anchors');
-	ResponseMonitor.register(my_anchors); //the clicks on the links will be monitored
-</script>
-```
-
-##### URLs #####
-
-A string defining an URL can be used as a request trigger.
-
-```javascript
-<script>
-	var myMonitor = new ResponseMonitor('service.php?dividend=20&divisor=2');
-</script>
-```
-
-The request can then be initiated with the ` execute() ` method.
-
-```html
-<input type="button" value="Click Me!" onclick="myMonitor.execute();">
-```
-
-##### JQuery #####
-
-To use the JQuery plug-in, both the main source file and the JQuery plug-in must be available to the JavaScript engine.
-
-Script tags in a web page would look like this:
-
-```html
-<script src="response-monitor.js"></script>
-<script src="response-monitor.jquery.js"></script>
-```
-
-The following example registers all forms and anchors, setting a specific timeout of 20 seconds for forms:
-
-```JavaScript
-<script type="text/javascript">
-	$('a').ResponseMonitor();
-	$('form').ResponseMonitor({timeout: 20});
-</script>
-```
-
-##### Callbacks #####
-
-The callback functions are set on the `options` object and then passed on the `Constructor` or `register()` method.
-
-```JavaScript
-<script type="text/javascript">
-	var options = {
-		onRequest: function(token){
-			$('#cookie').html(token);
-			$('#outcome').html('');
-			$('#duration').html(''); 
-		},
-		onMonitor: function(countdown){
-			$('#duration').html(countdown); 
-		},
-		onResponse: function(status){
-			$('#outcome').html(status==1?'success':'failure');
-		},
-		onTimeout: function(){
-			$('#outcome').html('timeout');
-		}
-	};
-
-	$('a').ResponseMonitor(options);
-
-</script>
-```
 
 ## Limitations ##
 
