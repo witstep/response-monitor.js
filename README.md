@@ -5,13 +5,13 @@ A simple client-side JavaScript library for use in the implementation of web pag
 [Spin.js](http://fgnass.github.io/spin.js) is used as the default waiting indicator.
 
 ## TOC
-* [Features](#user-content-features)
-* [Browser Compatibility](#user-content-browser-compatibility)
-* [Getting the Library](#user-content-getting-the-library)
-* [API Reference](#user-content-api-reference)
-* [Example Usage](#user-content-example-usage)
-* [Limitations](#user-content-limitations)
-* [License](#user-content-license)
+* [Features](#features)
+* [Browser Compatibility](#browser-compatibility)
+* [Getting the Library](#getting-the-library)
+* [API Reference](#api-reference)
+* [Example Usage](#example-usage)
+* [Limitations](#limitations)
+* [License](#license)
  
 ## Features
 - Simple integration
@@ -168,15 +168,15 @@ Called once when the timeout period elapses without a response from the server.
 
 ## Example Usage ##
 
-* [Server-side](#user-content-server-side)
-    - [Cookies](#user-content-cookies)
-* [Client-side](#user-content-client-side)
-    * [Download Request Triggers](#user-content-download-request-triggers)
-        * [Forms](#user-content-forms)
-        * [Anchors](#user-content-anchors)
-        * [URLs](#user-content-urls)
-    * [JQuery](#user-content-jquery)
-    * [Callbacks](#user-content-Callbacks)
+* [Server-side](#server-side)
+    - [Cookies](#cookies)
+* [Client-side](#client-side)
+    * [Download Request Triggers](#download-request-triggers)
+        * [Forms](#forms)
+        * [Anchors](#anchors)
+        * [URLs](#urls)
+    * [JQuery](#jquery)
+    * [Callbacks](#Callbacks)
 
 ### Server-side ###
 
