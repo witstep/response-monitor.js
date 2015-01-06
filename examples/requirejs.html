@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>response-monitor.js: requireJS Demo</title>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"></script>
+		<script>
+		</script>
+
+		<style>
+			a{position: relative; padding: 5px;}
+			div{position: relative; width: 150px;}
+		</style>
+	</head>
+	<body>
+		<h1>download-monitor.js: requireJS Demo</h1>
+		<p>
+			<input type="button" value="Standalone Button" onclick="buttonDownloadMonitor.execute();">
+		</p>
+		<p>
+			<a name="a" href="service.php?dividend=100&divisor=5#10">100/5</a>
+			<a name="c" href="service.php?dividend=20&divisor=2#3">3s timeout</a>
+			<a name="b" href="service.php?dividend=100&divisor=0#5">Server-side error</a>
+		</p>
+		<div>
+			<form id="example_form" action="service.php#5">
+				<input name="dividend" type="text" value="10">
+				<input name="divisor" type="text" value="2">
+				<input type="submit">
+			</form>
+		</div>
+		<script>
+		var buttonDownloadMonitor;
+
+		requirejs.config({
+			paths: { 
+				'spin': ['//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin'],
+				'response-monitor': ['../js/response-monitor']
+			}
+		});
+
+		require(['response-monitor','spin'], function(ResponseMonitor){
+			buttonDownloadMonitor = new ResponseMonitor('service.php?dividend=20&divisor=2');
+			ResponseMonitor.register(document.anchors);
+			ResponseMonitor.register(document.getElementById('example_form'));
+		});
+
+		</script>
+	</body>
+</html>
