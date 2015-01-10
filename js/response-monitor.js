@@ -68,8 +68,8 @@
 			try{
 				this.spinner = new Spinner();
 			}catch(e){
-				var requireSpinner = require('spin');
-				this.spinner = new requireSpinner();
+				var SpinJS = require('spin');
+				this.spinner = new SpinJS();
 			}
 
 			var onTerminate = function(status){
