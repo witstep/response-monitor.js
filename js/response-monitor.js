@@ -64,32 +64,29 @@
 
 		ResponseMonitor.prototype._configDefaultSpinner = function(options){
 			var self = this;
-			try{
-				var Spinner = require('spin');
-			}catch(e){
-				console.log('Spin.js not loaded.',e);
-			}
-			
+	
 			try{
 				this.spinner = new Spinner();
-				var onTerminate = function(status){
-					self.spinner.stop();
-					if(status===0) console.log('error');
-				};
-				return {
-					onRequest: function(){
-						self.spinner.spin();
-						if(typeof self.trigger.nodeName !== 'undefined')//form or anchor
-							self.trigger.appendChild(self.spinner.el);	
-						else//url
-							document.body.appendChild(self.spinner.el);	
-					},
-					onResponse: onTerminate,
-					onTimeout: function(){onTerminate(); console.log('timeout');},
-				};
 			}catch(e){
-				throw new Error("Please define options or make spin.js available");
+				var requireSpinner = require('spin');
+				this.spinner = new requireSpinner();
 			}
+
+			var onTerminate = function(status){
+				self.spinner.stop();
+				if(status===0) console.log('error');
+			};
+			return {
+				onRequest: function(){
+					self.spinner.spin();
+					if(typeof self.trigger.nodeName !== 'undefined')//form or anchor
+						self.trigger.appendChild(self.spinner.el);	
+					else//url
+						document.body.appendChild(self.spinner.el);	
+				},
+				onResponse: onTerminate,
+				onTimeout: function(){onTerminate(); console.log('timeout');},
+			};
 		};
 
 		ResponseMonitor.prototype.execute = function(event) {
