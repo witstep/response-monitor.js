@@ -2,15 +2,16 @@
 <html>
 	<head>
 		<title>response-monitor.js: Countdown Demo</title>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 		<script src="../js/response-monitor.js"></script>
-		<script src="../js/response-monitor.jquery.js"></script>		
+		<script src="../js/response-monitor.jquery.js"></script>
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<style>
+			body{margin: 10px;text}
 			.btn-circle.btn-xl {
 				width: 70px;
 				height: 70px;
-				padding: 10px 16px;
+				padding: 18px;
 				font-size: 24px;
 				line-height: 1.33;
 				border-radius: 35px;
@@ -18,42 +19,43 @@
 		</style>
 	</head>
 	<body>
-		<p><a id="download_anchor" href="service.php?dividend=8&divisor=3#5">Download</a></p>
-		<p><button type="button" id="countdown_span" class="btn btn-circle btn-xl"></button></p>
+		<a class="btn btn-default btn-circle btn-xl glyphicon glyphicon-save" id="countdown" href="service.php?dividend=8&divisor=0#5"></a>
 		<script>
 			$( document ).ready(function() {
-				$('#countdown_span').hide();
 
 				var options = {
 
 					onRequest: function(cookieName){
-						$('#countdown_span')
-							.removeClass('btn-success')
-							.removeClass('btn-danger')
-							.addClass('btn-primary')
-							.show();
+
+						$('#countdown').each( function(){
+							$(this)
+								.removeClass('btn-success btn-danger glyphicon glyphicon-ok glyphicon-save glyphicon-warning-sign')
+								.addClass('btn-primary')
+								.blur();
+						});
 					},
 
 					onMonitor: function(countDown){
-						$('#countdown_span').html(countDown);
+						$('#countdown').html(countDown);
 					},
 
 					onResponse: function(status){
-						$('#countdown_span').removeClass('btn-primary');
+						$('#countdown').html('');
+						$('#countdown').removeClass('btn-primary');
 						if( status == 1)
-							$('#countdown_span').addClass('btn-success');
+							$('#countdown').addClass('btn-success glyphicon glyphicon-ok');
 						else
-							$('#countdown_span').addClass('btn-danger');
+							$('#countdown').addClass('btn-danger glyphicon glyphicon-warning-sign');
 					},
 
 					onTimeout:  function(){
-						$('#countdown_span')
+						$('#countdown')
 							.removeClass('btn-primary')
 							.addClass('btn-danger');
 					}
 				};
 
-				$('#download_anchor').ResponseMonitor(options);
+				$('#countdown').ResponseMonitor(options);
 			});
 		</script>
 	</body>
