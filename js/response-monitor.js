@@ -54,9 +54,10 @@
 					//using closure to support older versions of IE
 					window.setTimeout(function(){self.options.onResponse(token);}, 0);
 					self._terminate();
-				}else if (self.countdown === 0){
+				}else if (self.countdown < 0){
 					self._terminate();
 					window.setTimeout(self.options.onTimeout, 0);
+					return;
 				}
 				self.options.onMonitor(self.countdown--);
 			};
@@ -111,9 +112,9 @@
 			};
 			this._createIframe();
 			
-			this.downloadTimer = window.setInterval(this.monitor, 1000);
+			
 
-			//check whether the query string already has paramenters or not
+			//check whether the query string already has parameters or not
 			var separator = this.url.indexOf('?') !== -1 ? "&" : "?";
 
 			//note that the complete cookie name is not passed to the server, only the prefix
@@ -125,6 +126,9 @@
 				this.iframe.src = url;
 			
 			this.options.onRequest(this.cookie.name);
+
+			this.monitor();//check immediately
+			this.downloadTimer = window.setInterval(this.monitor, 1000);
 		};
 
 		ResponseMonitor.prototype._terminate = function () {
@@ -184,10 +188,14 @@
 		};
 
 		ResponseMonitor.prototype._removeIframe = function(){
-			if (navigator.appName == 'Microsoft Internet Explorer')
-				this.iframe.contentWindow.document.execCommand('Stop');
-			else
-				this.iframe.contentWindow.stop();
+			try{
+				if (navigator.appName == 'Microsoft Internet Explorer')
+					this.iframe.contentWindow.document.execCommand('Stop');
+				else//
+					this.iframe.contentWindow.stop();
+			}catch(e){
+				//not possible to stop the request to different (sub-) domains
+			}
 			document.body.removeChild(this.iframe);
 		};
 
