@@ -37,7 +37,7 @@ A simple client-side JavaScript library for use in the implementation of web pag
         * [Anchors](#anchors)
         * [URLs](#urls)
     * [JQuery](#jquery)
-    * [Callbacks](#Callbacks)
+    * [Callbacks](#callbacks)
 	* [RequireJS](#requirejs)
 
 ### Server-side ###
@@ -245,9 +245,9 @@ The following browsers have been tested:
 
 Use this option if you want to host the JS file(s) yourself.
 
-- Minified ([response-monitor.min.js](https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.min.js))
-- Original ([response-monitor.js](https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.js))
-- JQuery plug-in ([response-monitor.jquery.js] (https://raw.github.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.jquery.js))
+- Minified ([response-monitor.min.js](https://raw.github.com/witstep/response-monitor.js/v0.1.1/js/response-monitor.min.js))
+- Original ([response-monitor.js](https://raw.github.com/witstep/response-monitor.js/v0.1.1/js/response-monitor.js))
+- JQuery plug-in ([response-monitor.jquery.js] (https://raw.github.com/witstep/response-monitor.js/v0.1.1/js/response-monitor.jquery.js))
 
 #### Content Delivery Network
 
@@ -257,10 +257,10 @@ Rawgit is a free service that caches files from Github repositories, in the high
 
 You shouldn't use this option, without first reading and understanding the rawgit.com [FAQ](https://rawgit.com/faq).
 
-The ```<script>``` tag would look like this:
+The `script` tag would look like this:
 
 ```html
-<script src="http://cdn.rawgit.com/witstep/response-monitor.js/v0.1.0/js/response-monitor.min.js">
+<script src="//cdn.rawgit.com/witstep/response-monitor.js/v0.1.1/js/response-monitor.min.js">
 </script>
 ```
 ## API Reference ##
