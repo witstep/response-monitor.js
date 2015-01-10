@@ -1,0 +1,45 @@
+<div style="float: right; border: 1px solid; position: relative; margin: 0px 10px; padding: 5px;">
+	Download: <a class="btn btn-default btn-circle btn-xl glyphicon glyphicon-save" id="countdown" href="{{ site.demo_url }}?dividend=8&divisor=4#5"></a>
+</div>
+
+<script>
+	$( document ).ready(function() {
+			var options = {
+
+			onRequest: function(cookieName){
+				$('#countdown').each( function(){
+					$(this)
+						.removeClass('btn-success btn-danger glyphicon glyphicon-ok glyphicon-save glyphicon-warning-sign')
+						.addClass('btn-primary')
+						.blur();
+				});
+			},
+
+			onMonitor: function(countDown){
+				$('#countdown').html(countDown);
+			},
+
+			onResponse: function(status){
+				$('#countdown').html('');
+				$('#countdown').removeClass('btn-primary');
+				if( status == 1)
+					$('#countdown').addClass('btn-success glyphicon glyphicon-ok');
+				else
+					$('#countdown').addClass('btn-danger glyphicon glyphicon-warning-sign');
+			},
+
+			onTimeout:  function(){
+				$('#countdown').html('');
+				$('#countdown')
+					.removeClass('btn-primary')
+					.addClass('btn-danger glyphicon glyphicon-warning-sign');
+			}
+		};
+
+		$('#countdown').ResponseMonitor(options);
+
+		if(typeof document.URL.split('#')[1] !== 'undefined')
+			$('#countdown').click();
+
+	});
+</script>
