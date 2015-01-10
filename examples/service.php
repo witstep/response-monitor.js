@@ -41,12 +41,15 @@ echo "$dividend / $divisor = $result\r\n";
 print_r($_REQUEST);
 
 function setCookieToken($cookieName, $cookieValue, $httpOnly = true, $secure = false ) {
+	$domains = explode('.',$_SERVER["HTTP_HOST"]);
+	$tld = end($domains);
+	$sld = prev($domains);
 	setcookie(
 		$cookieName,
 		$cookieValue,
 		time()+300,            // expire in 5 mintes
 		"/",                   // your path
-		$_SERVER["HTTP_HOST"], // your domain
+		"$sld.$tld",           //
 		$secure,               // Use true over HTTPS
 		$httpOnly              // Set true for authentication cookies (XSS)
 	);
