@@ -113,7 +113,7 @@ For example
 
 After the form is registered, the submit event is intercepted and monitored.
 
-```javascript
+```html
 <script>
 	var my_form = document.getElementById('my_form');
 	ResponseMonitor.register(my_form); //the submit event of the form will monitored
@@ -135,7 +135,7 @@ Optionally, the hash fragment can be used to set the timeout period.
 
 In this example, a collection of Anchors is registered with a single call:
 
-```javascript
+```html
 <script>
 	var my_anchors = document.getElementsByClassName('my_anchors');
 	ResponseMonitor.register(my_anchors); //the clicks on the links will be monitored
@@ -146,7 +146,7 @@ In this example, a collection of Anchors is registered with a single call:
 
 A string defining an URL can be used as a request trigger.
 
-```javascript
+```html
 <script>
 	var myMonitor = new ResponseMonitor('service.php?dividend=20&divisor=2');
 </script>
@@ -171,7 +171,7 @@ Script tags in a web page would look like this:
 
 The following example registers all forms and anchors, setting a specific timeout of 20 seconds for forms:
 
-```JavaScript
+```html
 <script type="text/javascript">
 	$('a').ResponseMonitor();
 	$('form').ResponseMonitor({timeout: 20});
@@ -182,7 +182,7 @@ The following example registers all forms and anchors, setting a specific timeou
 
 The callback functions are set on the `options` object and then passed on the `Constructor` or `register()` method.
 
-```JavaScript
+```html
 <script type="text/javascript">
 	var options = {
 		onRequest: function(token){
@@ -202,7 +202,6 @@ The callback functions are set on the `options` object and then passed on the `C
 	};
 
 	$('a').ResponseMonitor(options);
-
 </script>
 ```
 
@@ -210,7 +209,7 @@ The callback functions are set on the `options` object and then passed on the `C
 
 The dependency on spin.js is optional and the related references can be ommitted, if implementing a custom waiting indicator.
 
-```JavaScript
+```html
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"></script>
 
