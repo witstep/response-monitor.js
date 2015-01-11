@@ -6,6 +6,4 @@ github_username:  witstep
 demo_url: http://as.witstep.com/oss/response-monitor.js/examples/service.php
 
 # Build settings
-markdown: redcarpet
-redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
+markdown: kramdown
