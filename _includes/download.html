@@ -1,0 +1,40 @@
+<div style="float: right; position: relative; margin: 10px;">
+	<a id="anchor" class="btn btn-lg btn-success" href="{{ site.demo_url }}?dividend=8&divisor=4#5">
+		response-monitor.js
+		<span style="width:30px;font-size:25px;" id="countdown" class="glyphicon glyphicon-save" aria-hidden="true"></span>
+	</a>
+</div>
+
+<script>
+	$( document ).ready(function() {
+		var options = {
+			onRequest: function(cookieName){
+				$('#anchor').blur();
+				$('#countdown').removeClass('glyphicon-save glyphicon-ok glyphicon-warning-sign');
+			},
+
+			onMonitor: function(countDown){
+				$('#countdown').html(countDown);
+			},
+
+			onResponse: function(status){
+				$('#countdown').html('');
+				if( status == 1)
+					$('#countdown').addClass('glyphicon-ok');
+				else
+					$('#countdown').addClass('glyphicon-warning-sign');
+			},
+
+			onTimeout:  function(){
+				$('#countdown').html('').addClass('glyphicon-warning-sign');
+			}
+		};
+
+		$('#anchor').ResponseMonitor(options);
+
+		if(typeof document.URL.split('#')[1] !== 'undefined')
+			if(document.URL.split('#')[1] == 'download')
+				$('#anchor').click();
+
+	});
+</script>

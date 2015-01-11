@@ -3,6 +3,6 @@ title: Response-monitor.js
 layout: default
 ---
 
-{% include demo.html %}
+{% include download.html %}
 
 {% include README.md %}
