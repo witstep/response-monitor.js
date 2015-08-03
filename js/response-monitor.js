@@ -188,13 +188,15 @@
 		};
 
 		ResponseMonitor.prototype._removeIframe = function(){
-			try{
-				if (navigator.appName == 'Microsoft Internet Explorer')
-					this.iframe.contentWindow.document.execCommand('Stop');
-				else//
-					this.iframe.contentWindow.stop();
-			}catch(e){
+			if(this.countdown < 0){//stop the request if it is a timeout
+				try{
+					if (navigator.appName == 'Microsoft Internet Explorer')
+						this.iframe.contentWindow.document.execCommand('Stop');
+					else//
+						this.iframe.contentWindow.stop();
+				}catch(e){
 				//not possible to stop the request to different (sub-) domains
+				}
 			}
 			document.body.removeChild(this.iframe);
 		};
